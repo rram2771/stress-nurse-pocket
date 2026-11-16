@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cardiac Stress Nurse Pocket App</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Permanent+Marker&display=swap">
+<style>
+:root{--ink:#222;--paper:#fffdf7;--red:#e4572e;--blue:#2e86de;--green:#20a37a;--purple:#8e44ad;--orange:#e67e22;--pink:#e84393;--teal:#16a3b8;--navy:#2c3e50;--yellow:#ffe066}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'Patrick Hand',system-ui,sans-serif;font-size:19px;line-height:1.3}
+body{background-image:radial-gradient(#e6e1d3 1px,transparent 1px);background-size:22px 22px;padding-bottom:84px}
+h1,h2,h3,.mk{font-family:'Permanent Marker',cursive;font-weight:400;margin:0;line-height:1.1}
+header{position:sticky;top:0;z-index:5;background:var(--yellow);border-bottom:3px solid var(--ink);padding:10px 12px;display:flex;gap:8px;align-items:center}
+header h1{font-size:20px;flex:1}
+#q{width:100%;font:inherit;font-size:18px;padding:8px 12px;border:2.5px solid var(--ink);border-radius:12px;background:#fff}
+main{max-width:640px;margin:0 auto;padding:12px}
+.card{background:#fff;border:3px solid var(--c,var(--ink));border-radius:16px 10px 18px 10px;box-shadow:3px 4px 0 rgba(0,0,0,.18);padding:12px 14px;margin:14px 0}
+.card h3{color:var(--c,var(--ink));font-size:21px;margin-bottom:6px}
+.card ul{margin:4px 0;padding-left:20px} .card li{margin:3px 0}
+.big{font-family:'Permanent Marker';font-size:24px;color:var(--c,var(--ink))}
+.sec-title{font-size:28px;text-align:center;margin:10px 0 2px}
+.sub{text-align:center;color:#666;margin-bottom:6px}
+svg.ecg{width:100%;height:auto;display:block;border-radius:8px;margin:6px 0}
+.hl{background:#ffe98a;border-radius:4px;padding:0 4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{display:block;width:100%;text-align:center;border:3px solid var(--c);border-radius:16px;background:#fff;padding:14px 8px;font:inherit;color:var(--ink);box-shadow:3px 4px 0 var(--c);cursor:pointer}
+.tile .e{font-size:38px;display:block}
+.tile .mk{font-size:18px;color:var(--c)}
+.sos{display:block;width:100%;background:var(--red);color:#fff;border:3px solid var(--ink);border-radius:16px;padding:14px;font-family:'Permanent Marker';font-size:24px;box-shadow:4px 5px 0 var(--ink);margin:12px 0;cursor:pointer}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:3px solid var(--ink);display:flex;z-index:6;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;background:none;border:0;padding:8px 2px 10px;font:inherit;font-size:13px;color:#555;cursor:pointer}
+nav button span{display:block;font-size:24px}
+nav button.on{color:var(--ink);background:var(--yellow);font-weight:700}
+.gang{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.gang .h{font-family:'Permanent Marker';font-size:13px}
+.gang .l{border:2.5px solid var(--ink);border-radius:10px;padding:4px 2px}
+.gang .l b{font-family:'Permanent Marker';font-size:20px;font-weight:400}
+.gang .l i{font-style:normal;color:var(--red);font-family:'Permanent Marker';font-size:20px}
+.gang .l small{display:block;font-size:13px;color:#444}
+.key span{display:inline-block;border-radius:6px;padding:1px 6px;margin:2px}
+table{border-collapse:collapse;width:100%} td,th{border:2px solid var(--ink);padding:3px 6px;text-align:center} th{background:#fff3c4;font-family:'Permanent Marker';font-weight:400}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;color:#fff;font-family:'Permanent Marker';font-size:14px;margin:2px}
+/* flashcards */
+.decks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fc-wrap{perspective:1200px;margin:10px 0}
+.fc{position:relative;min-height:330px;transition:transform .45s;transform-style:preserve-3d;cursor:pointer}
+.fc.flip{transform:rotateY(180deg)}
+.fc .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:4px 5px 0 rgba(0,0,0,.2);padding:16px;display:flex;flex-direction:column;justify-content:center;text-align:center}
+.fc .back{transform:rotateY(180deg);background:#f2fff7;border-color:var(--green)}
+.fc .q{font-family:'Permanent Marker';font-size:24px}
+.fc .a{font-family:'Permanent Marker';font-size:28px;color:var(--green)}
+.fc .tip{color:#666;font-size:16px;margin-top:8px}
+.row{display:flex;gap:10px}
+.btn{flex:1;font:inherit;font-size:19px;border:3px solid var(--ink);border-radius:14px;padding:12px;background:#fff;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.btn.again{background:#ffe3de} .btn.got{background:#dff7ea}
+.bar{height:12px;border:2px solid var(--ink);border-radius:8px;overflow:hidden;background:#fff}
+.bar i{display:block;height:100%;background:var(--green)}
+.empty{text-align:center;color:#777;padding:30px 0}
+.foot{text-align:center;color:#888;font-size:14px;margin:20px 0}
+</style>
+</head>
+<body>
+<header><h1>❤️ Stress Nurse Pocket</h1></header>
+<main id="app"></main>
+<nav id="nav">
+  <button data-go="home"><span>🏠</span>Home</button>
+  <button data-go="ecg"><span>📈</span>ECG</button>
+  <button data-go="stress"><span>🏃</span>Stress</button>
+  <button data-go="lexi"><span>💉</span>Lexiscan</button>
+  <button data-go="cards"><span>🧠</span>Flashcards</button>
+</nav>
+<script>
+/* ---------- waveform engine ---------- */
+const g=(x,c,w,a)=>a*Math.exp(-((x-c)**2)/(2*w*w));
+const N=[[.18,.025,.12],[.30,.008,-.08],[.32,.010,1],[.345,.010,-.25],[.55,.045,.25]];
+const T={normal:N,mitrale:[[.15,.018,.12],[.21,.018,.12],...N.slice(1)],pulmonale:[[.18,.018,.32],...N.slice(1)],
+peakedT:[...N.slice(0,4),[.52,.025,.75]],uwave:[...N,[.74,.03,.13]],osborn:[...N.slice(0,4),[.37,.012,.35],[.56,.045,.2]],
+epsilon:[...N.slice(0,4),[.365,.004,.08],[.38,.004,.07],[.56,.04,-.2]],delta:[[.16,.02,.12],[.27,.035,.25],[.32,.012,.95],[.35,.01,-.2],[.55,.045,.22]],
+wellens:[...N.slice(0,4),[.52,.04,.12],[.6,.04,-.5]],dewinter:[...N.slice(0,4),[.40,.03,-.15],[.48,.035,.9]],
+rsr:[[.18,.025,.12],[.30,.010,.45],[.33,.008,-.3],[.37,.012,.8],[.55,.045,-.15]],lbbb:[[.18,.025,.12],[.30,.012,-.2],[.33,.03,-.9],[.55,.06,.35]],
+brugada:[[.18,.025,.1],[.30,.01,.3],[.33,.012,.7],[.40,.06,.25],[.52,.03,-.35]],stemi:[...N.slice(0,3),[.42,.08,.45],[.55,.05,.25]],
+shark:[[.18,.025,.1],[.31,.012,.9],[.40,.05,.7],[.48,.04,.35]],stdep:[...N.slice(0,4),[.42,.05,-.22],[.58,.04,.15]],
+pericard:[[.18,.025,.12],[.24,.04,-.04],...N.slice(1,4),[.45,.07,.18],[.55,.045,.2]],earlyrep:[...N.slice(0,4),[.36,.008,.12],[.47,.07,.25],[.55,.04,.3]],
+wide:[[.18,.025,.1],[.33,.05,.9],[.5,.06,-.4]],hyperk:[[.33,.05,.7],[.48,.04,.8]]};
+function yAt(kind,x,beats){const b=Math.min(Math.floor(x),beats-1),fx=x-b;let y=0;
+ if(kind==='flat')return 0;
+ if(kind==='vfib')return .35*Math.sin(x*23)*(.6+.4*Math.sin(x*3.1))+.15*Math.sin(x*41+1);
+ if(kind==='vt')return .7*Math.sin(x*2*Math.PI*2.2);
+ if(kind==='sine')return .6*Math.sin(x*2*Math.PI);
+ if(kind==='torsades')return (.25+.6*Math.abs(Math.sin(x*.9)))*Math.sin(x*2*Math.PI*3);
+ if(kind==='flutter'){y=-.18*(1-2*((x*4)%1));return y+g(fx,.32,.01,1)+g(fx,.345,.01,-.2)}
+ if(kind==='afib'){y=.05*Math.sin(x*60)+.04*Math.sin(x*97+2);const f=(fx+(b%2?.12:0))%1;return y+g(f,.32,.01,1)+g(f,.345,.01,-.2)+g(f,.55,.045,.2)}
+ if(kind==='svt'){const f=(x*2.2)%1;return g(f,.32,.012,1)+g(f,.35,.012,-.2)+g(f,.6,.06,.2)}
+ if(kind==='paced')return g(fx,.28,.002,1.2)+g(fx,.34,.05,.9)+g(fx,.55,.06,-.35);
+ if(kind==='chb'){for(let i=0;i<beats/0.62+2;i++)y+=g(x,i*.62+.1,.025,.12);return y+g(fx,.5,.04,.9)+g(fx,.75,.06,-.3)}
+ if(['avb1','wenck','mob2'].includes(kind)){const pr={avb1:[.2],wenck:[.1,.16,.22,null],mob2:[.12,.12,null]}[kind];const v=pr[b%pr.length];y=g(fx,.12,.025,.12);
+  if(v!==null){const q=.12+v+.06;y+=g(fx,q,.01,1)+g(fx,q+.025,.01,-.2)+g(fx,q+.22,.045,.22)}return y}
+ if(kind==='mat'){const sh=[[[.18,.025,.12]],[[.16,.015,-.1]],[[.2,.02,.25],[.14,.015,.1]]][b%3];for(const c of[...sh,...N.slice(1)])y+=g(fx,...c);return y}
+ for(const c of T[kind]){let a=c[2];if(kind==='alt'&&b%2&&a>.5)a*=.55;y+=g(fx,c[0],c[1],a)}return y}
+T.alt=N;
+function ecg(kind,beats=3,color='#222',w=320,h=80){let d='';const n=200*beats;
+ for(let i=0;i<=n;i++){const x=i/n*beats;d+=(i?'L':'M')+(x/beats*w).toFixed(1)+','+(h*.62-yAt(kind,x,beats)*h*.55).toFixed(1)}
+ const id='p'+Math.random().toString(36).slice(2,7);
+ return `<svg class="ecg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="s${id}" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M8 0H0V8" fill="none" stroke="#f3b8b8" stroke-width=".5"/></pattern><pattern id="b${id}" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" fill="url(#s${id})"/><path d="M40 0H0V40" fill="none" stroke="#e98c8c"/></pattern></defs><rect width="${w}" height="${h}" fill="#fff5f5"/><rect width="${w}" height="${h}" fill="url(#b${id})"/><path d="${d}" fill="none" stroke="${color}" stroke-width="2.4" stroke-linejoin="round"/></svg>`}
+
+/* ---------- heart drawing ---------- */
+const HEART='M150 125 C95 120 62 170 72 235 C82 300 160 360 232 384 C300 345 352 282 346 210 C341 150 305 112 255 122 C232 112 180 110 150 125 Z';
+const lab=(x,y,t,c,s=19,a='start')=>`<text x="${x}" y="${y}" font-family="Permanent Marker" font-size="${s}" fill="${c}" text-anchor="${a}">${t}</text>`;
+function heart(){return `<svg viewBox="0 0 440 420" style="width:100%;max-width:380px;display:block;margin:auto"><rect x="138" y="30" width="30" height="105" rx="10" fill="#7fa7d9" stroke="#222" stroke-width="3"/><path d="M190 140 L188 70 C188 30 250 20 285 40 C305 52 308 75 300 95 L275 92 C278 70 262 58 240 62 C222 66 218 80 218 100 L218 140 Z" fill="#f08a7e" stroke="#222" stroke-width="3"/><path d="${HEART}" fill="#f6b3a4" stroke="#222" stroke-width="3.5"/><path d="M203 150 C150 168 98 215 108 288 C118 335 170 362 222 378" fill="none" stroke="#20a37a" stroke-width="9" stroke-linecap="round"/><path d="M222 150 L262 168" stroke="#8e44ad" stroke-width="10" stroke-linecap="round"/><path d="M262 168 C258 230 247 300 232 380" fill="none" stroke="#e4572e" stroke-width="9" stroke-linecap="round"/><path d="M256 225 L312 248 M249 285 L300 318" stroke="#e4572e" stroke-width="5" stroke-linecap="round"/><path d="M262 168 C305 162 336 190 344 235" fill="none" stroke="#2e86de" stroke-width="9" stroke-linecap="round"/><path d="M344 235 C346 262 340 285 330 300" fill="none" stroke="#2e86de" stroke-width="6" stroke-dasharray="6 6"/>${lab(8,215,'RCA','#20a37a',26)}${lab(352,192,'LCx','#2e86de',26)}${lab(268,405,'LAD','#e4572e',26)}${lab(300,140,'Left main','#8e44ad',16)}</svg>`}
+function gangGrid(){const W={L:'#cfe3ff',I:'#e3d1ff',S:'#ffd1e0',A:'#fff3a0','':'#fff'},nm={L:'Lateral',I:'Inferior',S:'Septal',A:'Anterior','':'skip'};
+ const cells=[['I','L'],['aVR',''],['V1','S'],['V4','A'],['II','I'],['aVL','L'],['V2','S'],['V5','L'],['III','I'],['aVF','I'],['V3','A'],['V6','L']];
+ return `<div class="gang"><div class="h" style="color:var(--purple)">① BIG LII ⬇</div><div class="h" style="color:#555">② little LI ⬇</div><div class="h" style="color:var(--pink)">③ ASS ⬆</div><div class="h" style="color:#c98a00">④ ALL ⬇</div>${cells.map(([n,t])=>`<div class="l" style="background:${W[t]}"><b>${n}</b> <i>${t}</i><small>${nm[t]}</small></div>`).join('')}</div>
+ <div class="key" style="margin-top:8px"><span style="background:#cfe3ff"><b>L</b> Lateral ➜ LCx</span><span style="background:#e3d1ff"><b>I</b> Inferior ➜ RCA</span><span style="background:#ffd1e0"><b>S</b> Septal ➜ LAD</span><span style="background:#fff3a0"><b>A</b> Anterior ➜ LAD</span></div>`}
+
+/* ---------- content ---------- */
+const C=(t,col,body,strip)=>({t,col,body,strip});
+const S={
+ecg:{title:'📈 Reading ECGs',sub:'Look at the picture first',items:[
+ C('🪜 The 6 steps','var(--green)','<div class="big" style="font-size:20px">1 Rhythm • 2 Rate • 3 P + QRS • 4 Axis • 5 Intervals • 6 ST/T</div>Same order, every ECG.',['normal',4]),
+ C('📐 Paper = a clock','var(--blue)','<b>Small box</b> 0.04 s • <b>Big box</b> 0.20 s<br>5 big = 1 second • 30 big = 6-sec strip'),
+ C('⏱ Rate: 300 rule','var(--green)','<div class="big">300 • 150 • 100 • 75 • 60 • 50</div>300 ÷ big boxes between R waves.<br>Irregular? QRS in 6 sec × 10.<br>🐢 &lt;60 brady • 🐇 &gt;100 tachy',['normal',3]),
+ C('📏 Normal numbers','var(--teal)','<table><tr><th>P</th><td>0.08–0.10</td></tr><tr><th>PR</th><td>0.12–0.20</td></tr><tr><th>QRS</th><td>&lt; 0.12</td></tr><tr><th>QTc</th><td>&lt; 0.44</td></tr><tr><th>Axis</th><td>−30° to +90°</td></tr></table>'),
+ C('👍 Axis = thumbs','var(--orange)','Left thumb = <b>Lead I</b> • Right thumb = <b>aVF</b><br>👍👍 normal • 👍👎 <b>LEFT</b> (leaving) • 👎👍 <b>RIGHT</b> (reaching) • 👎👎 extreme ➜ think VT'),
+ C('🕵️ Where is the MI? The gang','var(--pink)',null),
+ C('🫀 Coronary arteries','var(--red)',null),
+ C('💗 P-wave clues','var(--purple)','No P + irregular = <b>A-fib</b><br>≥3 P shapes = <b>MAT</b><br>M-shaped P (II) = <b>left atrium big</b><br>Tall pointy P (II) = <b>right atrium big</b>',['mitrale',3]),
+ C('🐦 LBBB: bird beak / M in V6','var(--red)','Wide QS in V1, notched M in V6. QRS ≥ 0.12. Can’t read ischemia.',['lbbb',3]),
+ C('🐰 RBBB: rabbit ears','var(--green)','rsR′ in V1, wide S in I and V6.',['rsr',3]),
+ C('⛵ Brugada','var(--blue)','Coved ST ↑ V1–V2 ➜ sudden-death risk.',['brugada',3]),
+ C('🦈 Shark fin','var(--purple)','Huge merged ST ↑ ➜ massive STEMI 🚨',['shark',3]),
+ C('🎢 Hyperkalemia','var(--pink)','Peaked T ➜ wide QRS ➜ sine ➜ arrest. Calcium first.',['hyperk',3]),
+ C('〰 Hypokalemia: U wave','var(--purple)','Bump after the T wave.',['uwave',3]),
+ C('🥶 Osborn wave','var(--green)','Hump after QRS ➜ hypothermia.',['osborn',3]),
+ C('⚡ Delta wave','var(--teal)','Short PR + slurred upstroke ➜ WPW.',['delta',3]),
+ C('💧 Electrical alternans','var(--blue)','Tall-short QRS ➜ tamponade.',['alt',5]),
+ C('🪚 Atrial flutter','var(--orange)','Sawtooth, often ~150 bpm.',['flutter',4]),
+ C('🌀 Atrial fibrillation','var(--purple)','No P, irregularly irregular.',['afib',5]),
+ C('😊 Pericarditis','var(--red)','Smiley ST ↑ in many leads + PR ↓.',['pericard',3]),
+ C('🏒 Early repolarization','var(--teal)','J-notch + concave ST ↑, usually benign.',['earlyrep',3]),
+ C('☠️ Wellens','var(--purple)','Deep / biphasic T V2–V3 ➜ critical LAD. ⛔ No stress test.',['wellens',3]),
+ C('☠️ De Winter','var(--pink)','Upsloping ST ↓ + tall T ➜ LAD occlusion = STEMI.',['dewinter',3]),
+ C('☠️ Posterior MI','var(--red)','ST ↓ + tall R V1–V3 ➜ get V7–V9.',['stdep',3]),
+ C('🐢 1st° AV block','var(--green)','PR &gt; 0.20, every P conducts.',['avb1',4]),
+ C('🐢 Mobitz I (Wenckebach)','var(--orange)','Longer, longer, longer, drop.',['wenck',8]),
+ C('🐢 Mobitz II','var(--red)','Same PR, sudden dropped QRS ⚠️',['mob2',6]),
+ C('🚨 3rd° complete block','var(--purple)','P’s and QRS ignore each other.',['chb',5]),
+ C('📟 Paced','var(--navy)','Spike before beat. V-paced = can’t read ischemia.',['paced',4]),
+]},
+stress:{title:'🏃 Stress Testing',sub:'Before • during • after',items:[
+ C('🪜 Test ladder','var(--purple)','📸 EKG ➜ 🏃 treadmill ➜ 🔊 stress echo ➜ ☢️ nuclear ➜ 🩻 CTA ➜ 🎈 cath<br><i>least ➜ most invasive</i>'),
+ C('🧭 Which test?','var(--teal)','🏃 Walks + normal ECG ➜ <b>treadmill</b><br>🙈 LBBB / paced / LVH / dig ➜ <b>add imaging</b><br>🦽 Can’t walk ➜ <b>Lexiscan</b> or <b>dobutamine echo</b>'),
+ C('🎯 Target heart rate','var(--red)','<div class="big">85% × (220 − age)</div>60 y/o ➜ 160 × 0.85 = <b>136</b>'),
+ C('🏃 Bruce protocol','var(--green)','<table><tr><th>Stage</th><th>mph</th><th>grade</th></tr><tr><td>1</td><td>1.7</td><td>10%</td></tr><tr><td>2</td><td>2.5</td><td>12%</td></tr><tr><td>3</td><td>3.4</td><td>14%</td></tr><tr><td>4</td><td>4.2</td><td>16%</td></tr><tr><td>5</td><td>5.0</td><td>18%</td></tr><tr><td>6</td><td>5.5</td><td>20%</td></tr><tr><td>7</td><td>6.0</td><td>22%</td></tr></table>3 minutes per stage.'),
+ C('🔴 Don’t start','var(--red)','📉 SBP &lt; 90 • 📈 &gt; 200 / 110<br>💔 ACS, MI &lt; 2–4 days • 🫁 decompensated HF<br>🩸 acute PE, pericarditis, myocarditis • 🤰 pregnancy • ⚡ uncontrolled fast rhythm'),
+ C('🟡 Caution','var(--orange)','Severe aortic stenosis • left main / LVOT obstruction • electrolytes off • HR &lt; 40'),
+ C('📉 ST depression','var(--purple)','≥ 1 mm, 2+ leads, <b>60–80 ms after J point</b><br>↘ downsloping (worst) &gt; ➡ horizontal &gt; ↗ upsloping',['stdep',3]),
+ C('⬆ ST elevation','var(--red)','≥ 1 mm without Q waves ➜ <b>stop + call</b> 🚨<br>aVR ↑ + diffuse ST ↓ ➜ left main / multivessel',['stemi',3]),
+ C('🛑 Stop now','var(--red)','📉 SBP drop &gt; 10 + ischemia<br>😣 moderate–severe angina • 😵 dizzy / near-faint<br>🥶 pale / cyanotic • ⚡ sustained VT<br>⬆ ST ↑ ≥ 1 mm • 🔌 can’t monitor • ✋ patient asks'),
+ C('🟡 Consider stopping','var(--orange)','ST ↓ &gt; 2 mm horiz/down • PVC runs, SVT, new block • new BBB • SBP &gt; 250 / DBP &gt; 115 • fatigue, wheeze, leg cramps'),
+ C('🙈 Can’t read ischemia','var(--navy)','LBBB • V-paced • WPW • LVH / digoxin ➜ needs imaging'),
+ C('🔊 Echo: rest vs peak','var(--pink)','💪➡💪💪 normal<br>💪➡😴 <b>ischemia</b> 🚨<br>😴➡😴 old scar'),
+ C('🎈 The pump','var(--blue)','<b>Preload</b> 🚰 filling • <b>Afterload</b> 🗜 pushing out • <b>Contractility</b> 💪 squeeze<br>CO = HR × SV'),
+ C('⏱ Holter / Zio / watch','var(--teal)','Days of recording; rare symptoms ➜ &gt; 3 days. Watch ECG = 1 lead, good for A-fib.'),
+]},
+lexi:{title:'💉 Lexiscan',sub:'Regadenoson 0.4 mg / 5 mL',items:[
+ C('💉 3-push timeline','var(--blue)','<div class="big" style="font-size:30px;text-align:center">💉 ➜ 💧 ➜ ⏱ ➜ ☢️</div>0.4 mg rapid ~10 s ➜ 5 mL saline flush ➜ wait 10–20 s ➜ tracer (same IV line, 22 g+)'),
+ C('⛔ No-go list','var(--red)','☕ caffeine within <b>12 h</b><br>🫁 active wheezing<br>🐢 2nd° / 3rd° AV block or sick sinus <b>without a working pacer</b><br>📉 SBP &lt; 90 • ⚠️ seizure history ➜ ask • dipyridamole: hold ~2 days'),
+ C('✅ Sinus / 1st° = go','var(--green)','1st° AV block: go, watch closely.',['avb1',4]),
+ C('⛔ Mobitz I = ask','var(--orange)','Label lists any 2nd° block. ASNC calls it relative ➜ <b>ask the provider</b>.',['wenck',8]),
+ C('⛔ Mobitz II / 2:1 / 3rd° = no','var(--red)','Unless a working pacemaker.',['mob2',6]),
+ C('📋 Monitor','var(--green)','🩺 BP every minute • 📈 continuous ECG • 🔁 3–5 min into recovery'),
+ C('😮‍💨 Expected side effects','var(--orange)','Short of breath • headache • flushing • chest pressure • GI • most gone in ~15 min'),
+ C('🔄 Reversal','var(--red)','<div class="big">Aminophylline 50–250 mg</div>Slow IV (50–100 mg over 30–60 s), per provider order.'),
+ C('🚨 Watch for','var(--purple)','Heart block / pauses • low BP • wheezing • seizure • ischemia • arrhythmia • crash cart in room'),
+]},
+code:{title:'🚨 Emergencies',sub:'ACLS quick look — follow your protocol',items:[
+ C('⚡ Shockable','var(--orange)','<b>V-fib • pulseless VT</b> ➜ shock, CPR right after',['vfib',4]),
+ C('🚫 Not shockable','var(--blue)','<b>Asystole</b> (confirm 2 leads) • <b>PEA</b>',['flat',3]),
+ C('💉 Arrest drugs','var(--red)','<div class="big">Epi 1 mg q3–5 min</div><div class="big">Amio 300 ➜ 150 mg</div>'),
+ C('🔎 H’s & T’s','var(--purple)','<b>H:</b> hypovolemia, hypoxia, H⁺, hypo/hyper-K, hypothermia<br><b>T:</b> tension pneumo, tamponade, toxins, thrombosis'),
+ C('SVT','var(--teal)','Valsalva ➜ adenosine 6 ➜ 12 mg rapid push + flush. Avoid in irregular wide / pre-excited AF.',['svt',4]),
+ C('A-fib RVR','var(--purple)','Diltiazem / metoprolol • anticoagulation check • unstable ➜ sync cardioversion',['afib',5]),
+ C('🌪 Torsades','var(--pink)','Mg 2 g IV • stop QT drugs • fix K⁺ / Mg²⁺',['torsades',4]),
+ C('🧪 Hyperkalemia','var(--blue)','Calcium FIRST • insulin + dextrose • albuterol • bicarb if acidotic • dialysis',['hyperk',3]),
+ C('🚨 STEMI','var(--red)','Aspirin 162–325 chewed • 12-lead ➜ cath lab • O₂ only if hypoxic',['stemi',3]),
+]}};
+
+/* ---------- flashcards ---------- */
+const D={
+ strips:{name:'📈 Name that strip',col:'var(--red)',cards:[['vfib','V-fib'],['afib','A-fib'],['flutter','Atrial flutter'],['svt','SVT'],['vt','VT'],['torsades','Torsades'],['flat','Asystole'],['rsr','RBBB'],['lbbb','LBBB'],['avb1','1st° AV block'],['wenck','Mobitz I'],['mob2','Mobitz II'],['chb','3rd° block'],['hyperk','Hyperkalemia'],['uwave','Hypokalemia (U wave)'],['osborn','Hypothermia (Osborn)'],['delta','WPW (delta)'],['wellens','Wellens'],['dewinter','De Winter'],['stemi','ST elevation'],['brugada','Brugada'],['pericard','Pericarditis'],['paced','Paced'],['alt','Electrical alternans']].map(([k,a])=>({q:'Name this strip',k,a}))},
+ gang:{name:'🕵️ MI gang & arteries',col:'var(--pink)',cards:[
+  {q:'BIG LII: which leads, read which way?',a:'I • II • III ⬇ = L I I'},{q:'little LI: which leads?',a:'aVL • aVF ⬇ = L I (skip aVR)'},
+  {q:'ASS backwards: which leads, which way?',a:'V3 • V2 • V1 ⬆ = A S S'},{q:'ALL: which leads?',a:'V4 • V5 • V6 ⬇ = A L L'},
+  {q:'L stands for… and which artery?',a:'Lateral ➜ LCx'},{q:'I stands for… and which artery?',a:'Inferior ➜ RCA'},{q:'S and A = which artery?',a:'LAD (widow-maker)'},
+  {q:'ST ↑ II, III, aVF = ?',a:'Inferior MI ➜ RCA'},{q:'RCA usually feeds which nodes?',a:'SA + AV node ➜ watch brady / block'},
+  {q:'ST ↓ + tall R in V1–V3 = ?',a:'Posterior MI ➜ V7–V9'},{q:'ST ↑ aVR + ST ↓ everywhere = ?',a:'Left main / multivessel 🚨'}]},
+ nums:{name:'📏 Numbers',col:'var(--blue)',cards:[
+  {q:'1 small box = ?',a:'0.04 s'},{q:'1 big box = ?',a:'0.20 s'},{q:'Normal PR?',a:'0.12–0.20 s'},{q:'Normal QRS?',a:'< 0.12 s'},{q:'Normal QTc?',a:'< 0.44 s'},
+  {q:'R-R = 3 big boxes. Rate?',a:'100 bpm'},{q:'R-R = 4 big boxes. Rate?',a:'75 bpm'},{q:'300 rule sequence?',a:'300 150 100 75 60 50'},
+  {q:'Lead I 👍, aVF 👎 = ?',a:'Left axis deviation'},{q:'Lead I 👎, aVF 👍 = ?',a:'Right axis deviation'},{q:'Target HR formula?',a:'85% × (220 − age)'}]},
+ stress:{name:'🏃 Stress lab',col:'var(--green)',cards:[
+  {q:'Bruce stage 1 speed / grade?',a:'1.7 mph • 10%'},{q:'Bruce stage 3?',a:'3.4 mph • 14%'},{q:'How long is each Bruce stage?',a:'3 minutes'},
+  {q:'ST depression measured where?',a:'60–80 ms after the J point'},{q:'Most worrying ST depression shape?',a:'Downsloping ↘'},
+  {q:'BP response that = stop now?',a:'SBP drop > 10 with ischemia'},{q:'ST elevation ≥ 1 mm (no Q) during exercise?',a:'Stop + call provider 🚨'},
+  {q:'4 ECGs you can’t read for ischemia?',a:'LBBB • V-paced • WPW • LVH / digoxin'},{q:'Echo: moves at rest, slows at peak?',a:'Ischemia (blockage)'},
+  {q:'Deep T waves V2–V3, pain-free patient?',a:'Wellens ⛔ no stress test'},{q:'Don’t start if SBP / DBP is…',a:'> 200 / > 110 (or SBP < 90)'}]},
+ lexi:{name:'💉 Lexiscan',col:'var(--teal)',cards:[
+  {q:'Lexiscan dose?',a:'0.4 mg / 5 mL rapid ~10 s'},{q:'What comes right after the push?',a:'5 mL saline flush'},{q:'When does the tracer go in?',a:'10–20 s after the flush'},
+  {q:'Caffeine rule?',a:'None for 12 hours'},{q:'Reversal agent?',a:'Aminophylline 50–250 mg slow IV'},{q:'Mobitz II without pacer?',a:'⛔ Contraindicated'},
+  {q:'Mobitz I?',a:'⛔ Label lists 2nd° ➜ ask provider'},{q:'BP checks during Lexiscan?',a:'Every minute ➜ 3–5 min into recovery'},
+  {q:'Breathing finding that = no Lexiscan?',a:'Active wheezing'},{q:'Most side effects resolve in…',a:'~15 minutes'}]},
+ code:{name:'🚨 Emergencies',col:'var(--orange)',cards:[
+  {q:'Shockable rhythms?',a:'V-fib • pulseless VT'},{q:'Non-shockable?',a:'Asystole • PEA'},{q:'Epi dose in arrest?',a:'1 mg IV/IO q3–5 min'},
+  {q:'Amiodarone in VF/VT?',a:'300 mg ➜ 150 mg'},{q:'Torsades drug?',a:'Magnesium 2 g IV'},{q:'SVT drug + doses?',a:'Adenosine 6 ➜ 12 mg'},
+  {q:'Hyperkalemia with ECG changes: first drug?',a:'Calcium (protects the heart)'},{q:'STEMI aspirin?',a:'162–325 mg chewed'}]}};
+
+/* ---------- state ---------- */
+let st={deck:null,queue:[],done:0,total:0,flip:false};
+const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+/* ---------- render ---------- */
+const app=document.getElementById('app');
+function cardHTML(c){let body=c.body;
+ if(c.t.startsWith('🕵️'))body=gangGrid();
+ if(c.t.startsWith('🫀 Coronary'))body=heart()+'<div style="margin-top:6px">🟢 <b>RCA</b> bottom + SA/AV node • 🔴 <b>LAD</b> front + septum • 🔵 <b>LCx</b> side + back</div>';
+ return `<div class="card" style="--c:${c.col}"><h3>${c.t}</h3>${c.strip?ecg(c.strip[0],c.strip[1],c.col.includes('navy')?'#2c3e50':'#222'):''}<div>${body}</div></div>`}
+function section(key){const s=S[key];return `<h2 class="sec-title">${s.title}</h2><div class="sub">${s.sub}</div><input id="q" type="search" placeholder="🔎 search ${s.title.replace(/^\S+\s/,'')}…" data-sec="${key}"><div id="list">${s.items.map(cardHTML).join('')}</div><div class="foot">Teaching reference — follow your protocol, the drug label & supervising provider.</div>`}
+function home(){const stats=store.get('fcStats',{});const seen=Object.values(stats).reduce((a,b)=>a+(b.got||0),0);
+ return `<h2 class="sec-title">Hi! 👋</h2><div class="sub">Quick reference for the stress lab</div>
+ <button class="sos" data-go="code">🚨 EMERGENCY / ACLS</button>
+ <div class="grid2">
+ <button class="tile" style="--c:var(--blue)" data-go="ecg"><span class="e">📈</span><span class="mk">Read ECGs</span></button>
+ <button class="tile" style="--c:var(--green)" data-go="stress"><span class="e">🏃</span><span class="mk">Stress test</span></button>
+ <button class="tile" style="--c:var(--teal)" data-go="lexi"><span class="e">💉</span><span class="mk">Lexiscan</span></button>
+ <button class="tile" style="--c:var(--purple)" data-go="cards"><span class="e">🧠</span><span class="mk">Flashcards</span></button></div>
+ <div class="card" style="--c:var(--pink)"><h3>🕵️ MI gang</h3>${gangGrid()}</div>
+ <div class="card" style="--c:var(--green)"><h3>⏱ Rate</h3><div class="big">300 150 100 75 60 50</div>${ecg('normal',3)}</div>
+ <div class="foot">🧠 Flashcards mastered: <b>${seen}</b><br>Teaching reference — follow your protocol & provider.</div>`}
+function decks(){const stats=store.get('fcStats',{});return `<h2 class="sec-title">🧠 Flashcards</h2><div class="sub">Tap a deck • tap the card to flip</div>
+ <button class="sos" style="background:var(--purple)" data-deck="all">🎲 MIX ALL DECKS</button>
+ <div class="decks">${Object.entries(D).map(([k,d])=>`<button class="tile" style="--c:${d.col}" data-deck="${k}"><span class="mk" style="font-size:17px">${d.name}</span><br><span style="font-size:15px">${d.cards.length} cards • ✅ ${stats[k]?.got||0}</span></button>`).join('')}</div>`}
+function startDeck(k){const cards=k==='all'?Object.entries(D).flatMap(([dk,d])=>d.cards.map(c=>({...c,dk}))):D[k].cards.map(c=>({...c,dk:k}));
+ st={deck:k,queue:shuffle(cards),done:0,total:cards.length,flip:false};drawCard()}
+function drawCard(){if(!st.queue.length){app.innerHTML=`<div class="card" style="--c:var(--green);text-align:center"><div style="font-size:60px">🎉</div><h3>Deck done!</h3>You got all ${st.total} cards.</div><div class="row"><button class="btn" data-deck="${st.deck}">🔁 Again</button><button class="btn" data-go="cards">📚 Decks</button></div>`;return}
+ const c=st.queue[0];const pct=Math.round(st.done/st.total*100);
+ app.innerHTML=`<div class="row" style="align-items:center;margin:6px 0"><button class="btn" style="flex:0 0 auto;padding:6px 12px" data-go="cards">⬅</button><div style="flex:1"><div class="bar"><i style="width:${pct}%"></i></div></div><b>${st.done}/${st.total}</b></div>
+ <div class="fc-wrap"><div class="fc${st.flip?' flip':''}" data-act="flip"><div class="face"><div class="q">${c.q}</div>${c.k?ecg(c.k,['wenck','afib','alt'].includes(c.k)?6:4):''}<div class="tip">👆 tap to flip</div></div><div class="face back"><div class="tip">${c.q}</div><div class="a">${c.a}</div>${c.k?ecg(c.k,['wenck','afib','alt'].includes(c.k)?6:4,'#20a37a'):''}</div></div></div>
+ <div class="row"><button class="btn again" data-act="again">🔁 Again</button><button class="btn got" data-act="got">✅ Got it</button></div>`}
+function grade(ok){const c=st.queue.shift();const stats=store.get('fcStats',{});stats[c.dk]=stats[c.dk]||{got:0,again:0};
+ if(ok){st.done++;stats[c.dk].got++}else{stats[c.dk].again++;st.queue.splice(Math.min(3,st.queue.length),0,c)}store.set('fcStats',stats);st.flip=false;drawCard()}
+function route(){const h=(location.hash||'#home').slice(1);const v=['home','ecg','stress','lexi','code','cards'].includes(h)?h:'home';
+ app.innerHTML=v==='home'?home():v==='cards'?decks():section(v);
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===v||(v==='code'&&b.dataset.go==='home')));window.scrollTo(0,0)}
+
+/* ---------- events (delegated) ---------- */
+document.addEventListener('click',e=>{const t=e.target.closest('[data-go],[data-deck],[data-act]');if(!t)return;
+ if(t.dataset.go){location.hash=t.dataset.go;if((location.hash.slice(1))===t.dataset.go)route();return}
+ if(t.dataset.deck){startDeck(t.dataset.deck);window.scrollTo(0,0);return}
+ const a=t.dataset.act;if(a==='flip'){st.flip=!st.flip;t.classList.toggle('flip')}else if(a==='again')grade(false);else if(a==='got')grade(true)});
+document.addEventListener('input',e=>{if(e.target.id!=='q')return;const q=e.target.value.toLowerCase().trim();
+ document.querySelectorAll('#list .card').forEach(c=>{c.style.display=!q||c.textContent.toLowerCase().includes(q)?'':'none'})});
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
